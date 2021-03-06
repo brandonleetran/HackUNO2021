@@ -8,11 +8,44 @@
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="/styles.css">
 
 </head>
 
 <body>
-  <script src="js/scripts.js"></script>
+  <div class="trait-container">
+    <div class="trait-title">
+      <h2>Traits</h2>
+    </div>
+    <div class="slide-container">
+      <p>Number of People: <span id="textinput1">50</span></p>
+      <input type="range" id="input1" min="10" max="200" value="50" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+
+      <p>People Infected (%): <span id="textinput2">1</span></p>
+      <input type="range" id="input2" min="1" max="100" value="1" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+
+      <p>Infection Chance (%):  <span id="textinput3">0</span></p>
+      <input type="range" id="input3" min="0" max="100" value="0" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+
+      <p>Masked Usage (%): <span id="textinput4">0</span></p>
+      <input type="range" id="input4" min="0" max="100" value="0" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+
+      <p>Mortality Rate (%): <span id="textinput5">0</span></p>
+      <input type="range" id="input5" min="0" max="100" value="0" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+
+      <p>Self-Quarantine (%): <span id="textinput6">0</span></p>
+      <input type="range" id="input6" min="0" max="100" value="0" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+
+      <p>Walking Distance (m):  <span id="textinput7">0</span></p>
+      <input type="range" id="input7" min="0" max="500" value="0" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+
+      <div class="trait-button-container">
+        <button id="trait-button" type="button" onclick="clearCanvas()">Reset</button>
+      </div>
+    </div>
+  </div>
+  <canvas id="myCanvas"></canvas>
+ 
+  <script src="script.js"></script>
 </body>
 </html>

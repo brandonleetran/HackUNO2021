@@ -1,3 +1,91 @@
-.test {
-    background-color: aliceblue;
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #556555;
+    background-image: url("https://www.transparenttextures.com/patterns/bright-squares.png");
 }
+
+p {
+    margin: 20px 0 0 0;
+}
+
+/* START- TRAIT CONTAINER */
+
+.trait-container {
+    width: 175px;
+    border: 2px solid black;
+    padding: 15px;
+    margin: 0 auto;
+    position: absolute;
+    background-color: rgba(0, 0, 0, .25r);
+}
+
+.trait-title h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.trait-button-container {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#trait-button {
+    border: none;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+    padding: 7px 15px;
+    background-color: #4caf50;
+    user-select: none;
+    outline: none;
+    transition: background-color 0.2s;
+    font-size: 12px;
+}
+
+#trait-button:hover {
+    cursor: pointer;
+    background-color: #43f549;
+}
+
+.slide-container {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #4caf50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #4caf50;
+    cursor: pointer;
+}
+
+/* END - TRAIT CONTAINER */
