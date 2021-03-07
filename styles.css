@@ -12,18 +12,17 @@ p {
 /* START- TRAIT CONTAINER */
 
 .trait-container {
+    font-weight: bold;
     width: 175px;
     border: 2px solid black;
     padding: 15px;
     margin: 0 auto;
     position: absolute;
-    background-color: rgba(0, 0, 0, .25r);
+    transition: background-color .1s;
 }
 
-.trait-title h2 {
-    margin-top: 0;
-    margin-bottom: 0;
-    text-align: center;
+.trait-container:hover {
+    background-color: rgba(255, 255, 255, .2);
 }
 
 .trait-button-container {
