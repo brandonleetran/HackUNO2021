@@ -244,7 +244,6 @@ Person.prototype.drawPerson = function () {
     }
     ctx.restore();
   } catch (e) {
-    console.log(e);
   }
 };
 
@@ -274,6 +273,7 @@ Person.prototype.detectCollisions = function () {
         person2.isColliding = true;
       
         if (person1.isInfected && !person2.isInfected) {
+          if (!person1.collisionIgnore.includes(person2.id)) {
             if (Math.floor(Math.random() * 100) <= this.infectionChance) {
                 person2.isInfected = true;
                 if (Math.floor(Math.random() * 100) 
@@ -281,20 +281,17 @@ Person.prototype.detectCollisions = function () {
                   person2.isQuarantined = true;
                 }
             }
-            if (!person1.collisionIgnore.includes(person2.id)) {
-                person1.collisionIgnore.push(person2.id);
-                setTimeout(
-                    function () {
-                    person1.collisionIgnore.splice(0, 1);
-                    }.bind(person1),
-                    1000
-                    );
-            }
+            
+            person1.collisionIgnore.push(person2.id);
+            
+            setTimeout(function () {
+              person1.collisionIgnore.splice(0, 1);
+            }.bind(person1), 500);            
+          }            
         } 
         
         if (!person1.isInfected && person2.isInfected) {
           if (!person2.collisionIgnore.includes(person1.id)) {
-
             if (Math.floor(Math.random() * 100)  <= this.infectionChance) {
                 person1.isInfected = true;
                 if (Math.floor(Math.random() * 100) 
@@ -302,21 +299,13 @@ Person.prototype.detectCollisions = function () {
                     person1.isQuarantined = true;
                 }
             }
-            
-            
 
-            
-            if (!person2.collisionIgnore.includes(person1.id)) {
+            person2.collisionIgnore.push(person1.id);
 
-                person2.collisionIgnore.push(person1.id);
-                setTimeout(
-                    function () {
-                    person2.collisionIgnore.splice(0, 1);
-                    }.bind(person2),
-                    1000
-                    );
-                
-            }    
+            setTimeout(function () {
+              person2.collisionIgnore.splice(0, 1);
+            }.bind(person2), 500);            
+          }
         }
 
         
