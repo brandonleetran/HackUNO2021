@@ -22,16 +22,10 @@ infectedPersonImages[3].src = "images/person4_infected.png";
 var people = [];
 
 // for stats
-var peopleInfected = document.getElementById("input2").value;
-var peopleWithMasks = document.getElementById("input4").value;
-var peopleQuarantine = document.getElementById("input5").value;
-
+var peopleInfected = 0;
+var popInfected = document.getElementById("popInfected");
 
 var maxPeople = document.getElementById("input1").value;
-
-Person.prototype.clicked = function () {
-  var clicked = true;
-};
 
 function clearCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -42,7 +36,7 @@ function clearCanvas() {
   }
 }
 
-function detectEdgeCollisions() {
+Person.prototype.detectEdgeCollisions = function() {
   let person;
   for (let i = 0; i < people.length; i++) {
     person = people[i];
@@ -76,10 +70,17 @@ for (let i = 0; i < eval(maxPeople); i++) {
 }
 
 function gameLoop() {
+  peopleInfected = 0;
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   for (let i = 0; i < people.length; i++) {
     people[i].update();
-  }
+  } 
+
+  document.getElementById("popInfected").innerHTML = peopleInfected;
+
+  popInfected.innerText = peopleInfected  + " (%" + Math.round(((peopleInfected / document.getElementById("input1").value) * 100))  + ")";
+  
   requestAnimationFrame(gameLoop);
 }
 
@@ -100,7 +101,7 @@ function Person() {
   this.rotationSpeed = 3;
   this.rotateTarget = 0;
   this.size = Math.random() * 20 + 30;
-  this.mass = 0.3;
+  this.mass = 1;
   // if slider is 70%, then 70% will be true, and 30% will be false
   this.isInfected =
     Math.random() < document.getElementById("input2").value / 100;
@@ -133,6 +134,8 @@ Person.prototype.update = function () {
   this.x += this.velX;
   this.y += this.velY;
 
+  if (this.isInfected) peopleInfected++;
+
   this.velX = this.speed * Math.cos((this.angle * Math.PI) / 180);
   this.velY = this.speed * Math.sin((this.angle * Math.PI) / 180);
   this.rotate();
@@ -143,26 +146,6 @@ Person.prototype.update = function () {
   this.drawPerson();
 };
 
-
-/*
-Person.prototype.quarantine = function () {
-  // only infected people can self-quarantine
-  if (this.isInfected && this.isQuarantined) {
-    // one second = 1 day
-    // after 14 days they will go back to their normal speed
-    this.speed = 0;
-
-    setTimeout(
-      function () {
-        this.speed = 0.75;
-        this.isInfected = false;
-        this.isQuarantined = false;
-      }.bind(this),
-      14000
-    );
-  }
-};
-*/
 Person.prototype.walk = function () {
   let a = this.x - this.targetPos[0];
   let b = this.y - this.targetPos[1];
@@ -170,6 +153,10 @@ Person.prototype.walk = function () {
   let distanceToTarget = Math.sqrt(a * a + b * b);
 
   if (distanceToTarget < 15) {
+    var x = this.startingPos[0] +
+    Math.random() * this.walkDistance -
+    this.walkDistance / 2
+
     this.targetPos = [
       this.startingPos[0] +
         Math.random() * this.walkDistance -
@@ -280,31 +267,35 @@ Person.prototype.detectCollisions = function () {
           person1.size / 1.5, // 2,
           person2.x,
           person2.y,
-          person2.size / 1,5 // 2
+          person2.size / 1.5 // 2
         )
       ) {
         person1.isColliding = true;
         person2.isColliding = true;
-        
+      
         if (person1.isInfected && !person2.isInfected) {
-            if (Math.floor(Math.random() * 100) <= 100) {
+            if (Math.floor(Math.random() * 100) <= this.infectionChance) {
                 person2.isInfected = true;
                 if (Math.floor(Math.random() * 100) 
                 <= document.getElementById("input6").value) {
-                   person2.isQuarantined = true;
+                  person2.isQuarantined = true;
                 }
             }
-        }
-        person1.collisionIgnore.push(person2.id);
+            if (!person1.collisionIgnore.includes(person2.id)) {
+                person1.collisionIgnore.push(person2.id);
+                setTimeout(
+                    function () {
+                    person1.collisionIgnore.splice(0, 1);
+                    }.bind(person1),
+                    1000
+                    );
+            }
+        } 
         
-        setTimeout(() => {
-            person1.collisionIgnore.splice(0, 1);
-            }, 1000
-        );
-        
-
         if (!person1.isInfected && person2.isInfected) {
-            if (Math.floor(Math.random() * 100)  <= 100) {
+          if (!person2.collisionIgnore.includes(person1.id)) {
+
+            if (Math.floor(Math.random() * 100)  <= this.infectionChance) {
                 person1.isInfected = true;
                 if (Math.floor(Math.random() * 100) 
                 <= document.getElementById("input6").value) {
@@ -312,48 +303,27 @@ Person.prototype.detectCollisions = function () {
                 }
             }
             
-        }
-        
-        /*
-        if (!person1.collisionIgnore.includes(person2.id)) {
-            if (person1.isInfected && !person2.isInfected) {
-                if (Math.floor(Math.random() * 100) <= 100) {
-                    person2.isInfected = true;
-                    }
-            person1.collisionIgnore.push(person2.id);
-            console.log("\nbefore timeout\np1 Id: " + person1.id 
-            + "\nbefore timeout\np2 Id: " + person2.id
-            + "\nentire colIg[]: " + person1.collisionIgnore)
-            setTimeout(
-                function () {
-                    console.log("\nbefore func\np1 Id: " + person1.id
-                + "\nbefore  func\np2 Id: " + person2.id
-                + "\nentire colIg[]: " + person1.collisionIgnore)
-                person1.collisionIgnore.splice(0, 1);
-                console.log("\nafter func\np1 Id: " + person1.id
-                + "\nafter  func\np2 Id: " + person2.id
-                + "\nentire colIg[]: " + person1.collisionIgnore)
-                }.bind(person1),
-                1000
-                );
-            }
+            
+
+            
+            if (!person2.collisionIgnore.includes(person1.id)) {
+
+                person2.collisionIgnore.push(person1.id);
+                setTimeout(
+                    function () {
+                    person2.collisionIgnore.splice(0, 1);
+                    }.bind(person2),
+                    1000
+                    );
+                
+            }    
         }
 
-        if (!person2.collisionIgnore.includes(person1.id)) {
-            if (!person1.isInfected && person2.isInfected) {
-                if (Math.floor(Math.random() * 100)  <= 100) {
-                    person1.isInfected = true;
-                }
-            person2.collisionIgnore.push(person1.id);
-            setTimeout(
-                function () {
-                person2.collisionIgnore.splice(0, 1);
-                }.bind(person2),
-                1000
-                );
-            }
-        } 
-        */   
+        
+
+        
+        
+        
 
         //calculate collision vector
         let vCollision = { x: person2.x - person1.x, y: person2.y - person1.y };
@@ -383,7 +353,9 @@ Person.prototype.detectCollisions = function () {
           break;
         }
 
-        var impulse = (1 * speed) / (person1.mass + person2.mass);
+        // var impulse = (1 * speed) / (person1.mass + person2.mass);
+        var impulse = .01;
+
         person1.velX -= impulse * person2.mass * vCollisionNorm.x;
         person1.velY -= impulse * person2.mass * vCollisionNorm.y;
         person2.velX += impulse * person1.mass * vCollisionNorm.x;
@@ -395,11 +367,8 @@ Person.prototype.detectCollisions = function () {
 
 Person.prototype.infected = function () {
     if (this.isInfected && this.isQuarantined) {
-      // one second = 1 day
-      // after 14 days they will go back to their normal speed
       this.speed = 0;
     }
-  
     if (this.isInfected) {
       if (!this.infectionIgnore.includes(this.id)) {
           setTimeout(
@@ -411,6 +380,8 @@ Person.prototype.infected = function () {
               this.isQuarantined = false;
           }.bind(this), 
           14000
+            // one second = 1 day
+            // after 14 days they will go back to their normal speed
           );
   
           this.infectionIgnore.push(this.id);
@@ -425,11 +396,11 @@ Person.prototype.infected = function () {
 };
   
 function circleIntersect(x1, y1, r1, x2, y2, r2) {
-  // Calculate the distance between the two circles
+  // Calculate distance between circles
   let squareDistance = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
 
-  // When the distance is smaller or equal to the sum
-  // of the two radius, the circles touch or overlap
+  // When distance smaller or equal to the sum
+  // circles colliding
   return squareDistance <= (r1 + r2) * (r1 + r2);
 }
 

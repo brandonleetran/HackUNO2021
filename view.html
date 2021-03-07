@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Contagious</title>
+  <title>Contagion</title>
   <meta name="description" content="The HTML5 Herald">
   <meta name="author" content="SitePoint">
 
@@ -18,11 +18,11 @@
       <p>Number of People: <span id="textinput1">75</span></p>
       <input type="range" id="input1" min="10" max="200" value="75" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
 
-      <p>People Infected (%): <span id="textinput2">10</span></p>
-      <input type="range" id="input2" min="1" max="100" value="10" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+      <p>People Infected (%): <span id="textinput2">5</span></p>
+      <input type="range" id="input2" min="1" max="100" value="5" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
 
-      <p>Infection Chance (%):  <span id="textinput3">60</span></p>
-      <input type="range" id="input3" min="1" max="100" value="60" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
+      <p>Infection Chance (%):  <span id="textinput3">30</span></p>
+      <input type="range" id="input3" min="1" max="100" value="30" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
 
       <p>Mask Usage (%): <span id="textinput4">0</span></p>
       <input type="range" id="input4" min="0" max="100" value="0" class="slider" onmousemove="updateTextInput(this.value, this.id);" onchange="updateTextInput(this.value, this.id);"/>
@@ -43,8 +43,10 @@
       </div>
     </div>
   </div>
+  <div class="trait-stats">
+    <p>Population Infected: <span id="popInfected"></span></p>
+  </div>
   <canvas id="myCanvas"></canvas>
- 
   <script src="script.js"></script>
 </body>
 </html>
